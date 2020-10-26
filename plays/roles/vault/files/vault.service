@@ -1,0 +1,20 @@
+[Unit]
+Description=Vault secret management tool
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+User=vault
+Group=vault
+PIDFile=/var/run/vault/vault.pid
+Environment=VAULT_ADDR='https://127.0.0.1:8200'
+ExecStart=/usr/local/bin/vault server -config=/etc/vault.d/vault_server.hcl -log-level=debug
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+KillSignal=SIGTERM
+Restart=on-failure
+RestartSec=42s
+LimitMEMLOCK=infinity
+
+[Install]
+WantedBy=multi-user.target

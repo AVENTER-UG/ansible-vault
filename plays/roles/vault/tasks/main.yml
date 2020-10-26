@@ -1,0 +1,59 @@
+---
+  - name: Install unzip
+    package:
+      name: unzip
+      update_cache: yes
+
+  - name: Download and install vault binary
+    unarchive:
+      src: "https://releases.hashicorp.com/vault/{{ vault_version }}/vault_{{ vault_version }}_linux_amd64.zip"
+      dest: /usr/local/bin/
+      remote_src: True
+
+  - name: Create vault config directory
+    file:
+      state: directory
+      path: /etc/vault.d/
+
+  - name: Copy vault config to server
+    template: 
+      src: "vault_server.hcl.j2"
+      dest: "/etc/vault.d/vault_server.hcl"
+      mode: 0644
+
+  - name: Copy vault service to server
+    copy:
+      src: vault.service
+      dest: /etc/systemd/system
+
+  - name: Check if SSL Certificate Exist
+    stat: 
+      path: /etc/pki/tls/private/vault-selfsigned.key
+    register: ssl_cert
+
+  - name: Create Self Signed SSL Certificate
+    command: openssl req -subj "/C=DE/ST=NRW, Inc./CN=*.{{ domain }}" -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/pki/tls/private/vault-selfsigned.key  -out /etc/pki/tls/certs/vault-selfsigned.crt
+    when: ssl_cert.stat.exists == False
+
+  - name: create marathon group
+    group:
+      name: vault
+      system: yes
+      state: present    
+
+  - name: create mesos_dns user
+    user:
+      name: vault
+      group: vault
+      groups: vault
+      create_home: no
+      system: yes
+      state: present
+
+
+  - name: Start vault service
+    systemd:
+      state: started
+      name: vault
+      daemon_reload: yes
+

@@ -1,0 +1,20 @@
+# {{ ansible_managed }}
+
+### vault configuration
+
+listener "tcp" {
+  address          = "0.0.0.0:8200"
+  cluster_address  = "{{ ansible_default_ipv4.address }}:8201"
+  tls_cert_file    = "/etc/pki/tls/certs/vault-selfsigned.crt"
+  tls_key_file     = "/etc/pki/tls/private/vault-selfsigned.key"
+}
+
+storage "consul" {
+  address = "127.0.0.1:8500"
+  path    = "vault/"
+}
+
+ui = true
+
+api_addr = "http://{{ ansible_default_ipv4.address }}:8200"
+cluster_addr = "https:{{ ansible_default_ipv4.address }}:8201"
