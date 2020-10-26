@@ -1,0 +1,6 @@
+---
+- name: Install and Configure Vault
+  become: yes
+  hosts: vault
+  roles:
+    - role: vault
