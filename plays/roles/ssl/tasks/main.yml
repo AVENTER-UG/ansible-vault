@@ -1,0 +1,44 @@
+---
+  - name: Remove old SSL Certificate
+    file:
+      path: "/etc/pki/tls/private/vault-selfsigned.key"
+      state: absent
+    tags:
+      - sslrenew
+
+  - name: Check if SSL Certificate Exist
+    stat: 
+      path: "/etc/pki/tls/private/vault-selfsigned.key"
+    register: ssl_cert
+
+  - name: Copy ssl configuration file
+    template: src=vault.cnf.j2 dest=/etc/pki/tls/vault.cnf mode=0644
+    when: ssl_cert.stat.exists == False
+
+  - name: Generate Private Key
+    command: openssl genrsa -out /etc/pki/tls/private/vault-selfsigned.key 2048
+    when: ssl_cert.stat.exists == False
+
+  - name: Create CSR
+    command: openssl req -subj "/C=DE/ST=NRW, Inc./CN={{ inventory_hostname }}"  -new -out /etc/pki/tls/private/vault-selfsigned.csr -key /etc/pki/tls/private/vault-selfsigned.key -config /etc/pki/tls/vault.cnf
+    when: ssl_cert.stat.exists == False
+
+  - name: Dump Certificate
+    command: openssl req -text -noout -in /etc/pki/tls/private/vault-selfsigned.csr
+    register: dump_csr
+
+  - debug:
+      var: dump_csr
+
+  - name: Self Sign Certificate
+    command: openssl x509 -req -days 3650 -in  /etc/pki/tls/private/vault-selfsigned.csr -signkey /etc/pki/tls/private/vault-selfsigned.key -out /etc/pki/tls/certs/vault-selfsigned.crt -extensions v3_req -extfile /etc/pki/tls/vault.cnf
+    when: ssl_cert.stat.exists == False
+
+  - name: Restart vault service
+    systemd:
+      state: restarted
+      name: vault
+      daemon_reload: yes
+
+
+
