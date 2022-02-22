@@ -4,3 +4,7 @@
   hosts: vault
   roles:
     - role: vault
+    - role: ssl
+      tags:
+        - ssl
+        - sslrenew
