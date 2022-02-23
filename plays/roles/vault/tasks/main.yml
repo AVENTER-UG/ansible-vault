@@ -26,16 +26,8 @@
       src: vault.service
       dest: /etc/systemd/system
 
-  - name: Check if SSL Certificate Exist
-    stat: 
-      path: /etc/pki/tls/private/vault-selfsigned.key
-    register: ssl_cert
 
-  - name: Create Self Signed SSL Certificate
-    command: openssl req -subj "/C=DE/ST=NRW, Inc./CN=*.{{ domain }}" -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/pki/tls/private/vault-selfsigned.key  -out /etc/pki/tls/certs/vault-selfsigned.crt
-    when: ssl_cert.stat.exists == False
-
-  - name: create marathon group
+  - name: create vault  group
     group:
       name: vault
       system: yes
