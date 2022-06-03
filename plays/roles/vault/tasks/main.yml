@@ -27,13 +27,13 @@
       dest: /etc/systemd/system
 
 
-  - name: create vault  group
+  - name: create vault group
     group:
       name: vault
       system: yes
       state: present    
 
-  - name: create mesos_dns user
+  - name: create vault user
     user:
       name: vault
       group: vault
@@ -45,7 +45,14 @@
 
   - name: Start vault service
     systemd:
-      state: started
+      state: restarted
       name: vault
+      daemon_reload: yes
+
+  - name: Disable Firewall
+    systemd:
+      enabled: false
+      state: stopped
+      name: firewalld
       daemon_reload: yes
 

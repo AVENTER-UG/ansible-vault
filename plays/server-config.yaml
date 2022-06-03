@@ -4,6 +4,8 @@
   hosts: vault
   roles:
     - role: vault
+      tags:
+        - vault
     - role: ssl
       tags:
         - ssl
