@@ -1,3 +1,6 @@
+---
+
+ssl_path: "/etc/vault.d/ssl"
 ssl_countryName: "DE"
 ssl_stateOrProvinceName: "A"
 ssl_localityName: "City"

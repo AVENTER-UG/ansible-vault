@@ -1,0 +1,23 @@
+---
+
+- name: Allow access to port 8200
+  community.general.ufw:
+    rule: allow
+    port: '8200'
+    proto: tcp
+    from_ip: "{{ item }}"
+  loop: "{{ ufw_src_ip }}"
+
+- name: Allow access to port 8201
+  community.general.ufw:
+    rule: allow
+    port: '8201'
+    proto: tcp
+    from_ip: "{{ item }}"
+  loop: "{{ ufw_src_ip }}"
+
+
+
+  
+
+

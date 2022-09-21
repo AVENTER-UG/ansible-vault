@@ -10,22 +10,11 @@
       dest: /usr/local/bin/
       remote_src: True
 
-  - name: Create vault config directory
-    file:
-      state: directory
-      path: /etc/vault.d/
-
-  - name: Copy vault config to server
-    template: 
-      src: "vault_server.hcl.j2"
-      dest: "/etc/vault.d/vault_server.hcl"
-      mode: 0644
 
   - name: Copy vault service to server
     copy:
       src: vault.service
       dest: /etc/systemd/system
-
 
   - name: create vault group
     group:
@@ -42,17 +31,21 @@
       system: yes
       state: present
 
+  - name: Create vault config directory
+    file:
+      state: directory
+      path: /etc/vault.d/
+      group: vault
+
+  - name: Copy vault config to server
+    template: 
+      src: "vault_server.hcl.j2"
+      dest: "/etc/vault.d/vault_server.hcl"
+      mode: 0644
 
   - name: Start vault service
     systemd:
       state: restarted
       name: vault
-      daemon_reload: yes
-
-  - name: Disable Firewall
-    systemd:
-      enabled: false
-      state: stopped
-      name: firewalld
       daemon_reload: yes
 
