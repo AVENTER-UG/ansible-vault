@@ -1,2 +1,5 @@
+---
+
+ssl_path: "/etc/vault.d/ssl"
 vault_version: 1.9.3
 domain: localhost.local

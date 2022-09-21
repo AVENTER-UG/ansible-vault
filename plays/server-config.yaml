@@ -10,3 +10,6 @@
       tags:
         - ssl
         - sslrenew
+    - role: ufw_rules
+      tags:
+        - ufw
