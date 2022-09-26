@@ -58,6 +58,19 @@
       - "{{ ssl_path }}/private/vault-selfsigned.key"
       - "{{ ssl_path }}/certs/vault-selfsigned.crt"
 
+  - name: Copy ca into os (ubuntu)
+    copy:
+      src: "{{ ssl_path }}/certs/vault-selfsigned.crt"
+      dest: "{{ tls_path }}/certs"
+      remote_src: yes
+    when:
+      ansible_os_family == "Debian"
+
+  - name: update ca database
+    command: "update-ca-certificates"
+    when:
+      ansible_os_family == "Debian"
+    
   - name: Restart vault service
     systemd:
       state: restarted

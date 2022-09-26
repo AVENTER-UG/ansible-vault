@@ -3,7 +3,7 @@
 ### vault configuration
 
 listener "tcp" {
-  address          = "{{ ansible_default_ipv4.address }}:8200"
+  address          = "0.0.0.0:8200"
   cluster_address  = "{{ ansible_default_ipv4.address }}:8201"
   tls_cert_file    = "{{ ssl_path }}/certs/vault-selfsigned.crt"
   tls_key_file     = "{{ ssl_path }}/private/vault-selfsigned.key"
