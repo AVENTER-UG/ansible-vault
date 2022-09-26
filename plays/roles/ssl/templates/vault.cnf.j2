@@ -27,3 +27,6 @@ subjectAltName = @alt_names
 [alt_names]
 DNS.1 = {{ inventory_hostname }}
 DNS.2 = *.localhost.local 
+IP.1 = 127.0.0.1 
+IP.2 = {{ ansible_default_ipv4.address }}
+
