@@ -12,9 +12,10 @@
 
 
   - name: Copy vault service to server
-    copy:
-      src: vault.service
-      dest: /etc/systemd/system
+    template:
+      src: vault.service.j2
+      dest: /etc/systemd/system/vault.service
+      mode: 0644
 
   - name: create vault group
     group:

@@ -1,2 +1,4 @@
 *.retry
 hosts
+vars.*
+*.ini

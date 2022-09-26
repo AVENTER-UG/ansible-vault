@@ -3,18 +3,36 @@
 ### vault configuration
 
 listener "tcp" {
-  address          = "{{ ansible_default_ipv4.address }}:8200"
+  address          = "{{ vault_bind_interface }}:8200"
   cluster_address  = "{{ ansible_default_ipv4.address }}:8201"
+{% if digital_certs_required == true %}
   tls_cert_file    = "{{ ssl_path }}/certs/vault-selfsigned.crt"
   tls_key_file     = "{{ ssl_path }}/private/vault-selfsigned.key"
+{% else %}
+  tls_disable = true
+{% endif %}
 }
 
+{% if zookeeper_endpoint|length %}
+storage "zookeeper" {
+  address = "{{ zookeeper_endpoint }}"
+  path    = "{{ zookeeper_path }}"
+}
+{% elif consul_endpoint|length %}
 storage "consul" {
-  address = "127.0.0.1:8500"
-  path    = "vault/"
+  address = "{{ consul_endpoint}}"
+  path    = "{{ consul_path }}"
 }
+{% else %}
+storage "raft" {
+  path = "/opt/vault-storage/raft"
+  node_id = "{{ inventory_hostname }}"
+}
+{% endif %}
 
-ui = true
+ui = {{ ui_enabled }}
 
 api_addr = "http://{{ ansible_default_ipv4.address }}:8200"
 cluster_addr = "https:{{ ansible_default_ipv4.address }}:8201"
+
+cluster_name = "{{ vault_cluster_name }}"
