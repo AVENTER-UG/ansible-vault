@@ -7,7 +7,11 @@ After=network-online.target
 User=vault
 Group=vault
 PIDFile=/var/run/vault/vault.pid
+{% if digital_certs_required == true %}
 Environment=VAULT_ADDR='https://127.0.0.1:8200'
+{% else %}
+Environment=VAULT_ADDR='http://127.0.0.1:8200'
+{% endif %}
 ExecStart=/usr/local/bin/vault server -config=/etc/vault.d/vault_server.hcl -log-level=debug
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
