@@ -1,7 +1,6 @@
 # {{ ansible_managed }}
 
 ### vault configuration
-
 listener "tcp" {
   address          = "{{ vault_bind_interface }}:8200"
   cluster_address  = "{{ ansible_default_ipv4.address }}:8201"
@@ -12,7 +11,6 @@ listener "tcp" {
   tls_disable = true
 {% endif %}
 }
-
 {% if zookeeper_endpoint|length %}
 storage "zookeeper" {
   address = "{{ zookeeper_endpoint }}"
@@ -29,10 +27,7 @@ storage "raft" {
   node_id = "{{ inventory_hostname }}"
 }
 {% endif %}
-
 ui = {{ ui_enabled }}
-
 api_addr = "http://{{ ansible_default_ipv4.address }}:8200"
 cluster_addr = "https:{{ ansible_default_ipv4.address }}:8201"
-
 cluster_name = "{{ vault_cluster_name }}"
