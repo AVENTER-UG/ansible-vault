@@ -11,12 +11,12 @@ listener "tcp" {
   tls_disable = true
 {% endif %}
 }
-{% if zookeeper_endpoint|length %}
+{% if (zookeeper_endpoint|length) > 0 %}
 storage "zookeeper" {
   address = "{{ zookeeper_endpoint }}"
   path    = "{{ zookeeper_path }}"
 }
-{% elif consul_endpoint|length %}
+{% elif (consul_endpoint|length) > 0 %}
 storage "consul" {
   address = "{{ consul_endpoint}}"
   path    = "{{ consul_path }}"

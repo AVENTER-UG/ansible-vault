@@ -5,9 +5,9 @@ domain: localhost.local
 vault_zip_checksum:  sha256:b433413ce524f26abe6292f7fc95f267e809daeacdf7ba92b68dead322f92deb
 vault_cluster_name: "vault-server-{{ inventory_hostname }}"
 digital_certs_required: true
-zookeeper_endpoint: 
-zookeeper_path:
-consul_endpoint: 
-consul_path:
+zookeeper_endpoint: ""
+zookeeper_path: ""
+consul_endpoint: ""
+consul_path: ""
 ui_enabled: "true"
 vault_bind_interface: 0.0.0.0
