@@ -48,5 +48,6 @@
     systemd:
       state: restarted
       name: vault
+      enabled: true
       daemon_reload: yes
 

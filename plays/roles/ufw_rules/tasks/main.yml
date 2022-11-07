@@ -1,5 +1,23 @@
 ---
 
+- name: install packages centos
+  package:
+    name:
+      - ufw
+
+- name: enable ufw
+  lineinfile: 
+    dest: /etc/ufw/ufw.conf
+    state: present 
+    regexp: "ENABLED=*"
+    line: "ENABLED=yes"
+
+- name: enable and start ufw systemd
+  service: 
+    name: ufw
+    enabled: yes 
+    state: started
+
 - name: Allow access to port 8200
   community.general.ufw:
     rule: allow
